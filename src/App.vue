@@ -1,16 +1,22 @@
 <template>
-  <div class="container vh-100 p-3 text-white d-flex flex-column">
-    <h1 class="h1 p-5 d-flex justify-content-center">Quiz App</h1>
+  <div class="container vh-100 p-3 text-white d-flex flex-column ">
+    <h1 class="h1 p-5 d-flex justify-content-center ">Quiz App</h1>
 
     <!-- Quiz Content -->
     <div v-if="!showResults">
       <div v-if="questions && questions.length > 0" class="fs-3">
-        <div class="pb-3">
-          <span class="text-warning">Question .</span> {{ currentQuestionIndex + 1 }} / {{ questions.length }}
+        <div class="d-flex justify-content-between pb-3 flex-row gap-2">
+          <div class="d-flex">
+            <span class="text-warning">Question .</span> <span>{{ currentQuestionIndex + 1 }} / {{ questions.length }}</span>
+          </div>
+          <div class="d-flex gap-2 w-50">
+            <input v-model.number="questionJump" type="number" placeholder="Q. no" class="w-50">
+            <button @click="jumpQuestionNum" class="btn btn-primary w-50">Submit</button>
+          </div>
         </div>
         <div v-if="currentQuestion">
           <div class="pb-4">
-            <span>{{ currentQuestionIndex + 1 }} .</span>
+            <span class="text-warning">{{ currentQuestionIndex + 1 }} .</span>
             <span>{{ currentQuestion.Question }}</span>
           </div>
           <div class="d-flex gap-3 flex-column pb-4">
@@ -24,11 +30,11 @@
       </div>
 
       <!-- Exam and Explanation -->
-      <div v-if="currentQuestion && currentQuestion.Exam" class="text-bg-info pt-2 pb-2 pe-2 text-start">
-        {{ currentQuestion.Exam }}
+      <div v-if="currentQuestion && currentQuestion.Exam" class="pt-2 pb-2 pe-2 text-end">
+        <span class="text-bg-info pe-3 ps-3 pb-2 pt-2  ">Exam => {{ currentQuestion.Exam }}</span>
       </div>
-      <div v-if="currentQuestion && currentQuestion.Explanation" class="text-bg-info pt-2 pb-2 pe-2 text-end ">
-        {{ currentQuestion.Explanation }}
+      <div v-if="currentQuestion && currentQuestion.Explanation" class=" pt-2 pb-2 pe-2 text-start ">
+        <span class="text-bg-info pe-3 ps-3 pb-2 pt-2">Explanation => {{ currentQuestion.Explanation }} </span>
       </div>
 
       <!-- Navigation Buttons -->
@@ -61,6 +67,7 @@ export default {
       score: 0,
       showResults: false,
       selectedOption: null,
+      questionJump: null,
     };
   },
   methods: {
@@ -78,6 +85,7 @@ export default {
           Options: [A, B, C, D],
           CorrectAnswer: Answer
         }));
+        this.loadQuiz()
 
         console.log('CSV to JSON conversion successful:', jsonObj);
       } catch (error) {
@@ -105,6 +113,7 @@ export default {
       if (this.currentQuestionIndex < this.questions.length - 1) {
         this.currentQuestionIndex++
         this.resetOption();
+        this.saveQuiz()
       } else {
         this.showResults = true;
       }
@@ -117,6 +126,29 @@ export default {
     },
     removeNumbers(question) {
       return question.replace(/^\d+\.\s*/, '');
+    },
+    saveQuiz() {
+      const quiz = {
+        currentQuestionIndex: this.currentQuestionIndex,
+        score: this.score,
+      };
+      localStorage.setItem("quizIndex", JSON.stringify(quiz));
+    },
+    loadQuiz() {
+      const savedQuiz = localStorage.getItem("quizIndex");
+      if (savedQuiz) {
+        const { currentQuestionIndex, score } = JSON.parse(savedQuiz);
+        this.currentQuestionIndex = currentQuestionIndex;
+        this.score = score;
+      }
+    },
+    jumpQuestionNum() {
+      if (this.questionJump > 0 && this.questionJump <= this.questions.length) {
+        this.currentQuestionIndex = this.questionJump - 1;
+        this.resetOption();
+        this.saveQuiz();
+        this.questionJump = null;
+      }
     }
   },
   mounted() {
