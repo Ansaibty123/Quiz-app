@@ -5,9 +5,9 @@
     <!-- Quiz Content -->
     <div v-if="!showResults">
       <div v-if="questions && questions.length > 0" >
-        <div class="d-flex justify-content-between pb-3 flex-row gap-2 border-bottom border-light">
+        <div class="d-flex justify-content-between pb-3 flex-row gap-2 border-bottom border-light ">
           <div class="d-flex flex-row gap-2">
-            <span class="text-warning fs-2 fs-md-3">Question</span> <span class=" fs-2 fs-md-3"> {{ currentQuestionIndex + 1 }} / {{ questions.length }}</span>
+            <span class="text-warning text-center custom-font">Question</span> <span class=" custom-font"> {{ currentQuestionIndex + 1 }} / {{ questions.length }}</span>
           </div>
           <div class="d-flex gap-2 w-50 p-0">
             <input v-model.number="questionJump" type="number" placeholder="Q. no" class="w-50 p-0 p-md-3">
@@ -161,3 +161,10 @@ export default {
   },
 }
 </script>
+<style>
+@media (max-width:720px){
+.custom-font{
+  font-size: 1rem;
+}
+}
+</style>
