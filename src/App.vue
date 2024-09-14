@@ -47,7 +47,7 @@
       </div>
     </div>
 
-    <div class="d-flex justify-content-center ">
+    <div class="d-flex justify-content-center pt-4">
       <button @click="restartQuiz" class="btn btn-danger ">
         Restart
       </button>
