@@ -31,7 +31,7 @@
 
       <!-- Exam and Explanation -->
       <div v-if="currentQuestion && currentQuestion.Exam" class="pt-2 pb-2 pe-2 text-end">
-        <span class="text-bg-info  pb-2 pt-2  ">Exam => {{ currentQuestion.Exam }}</span>
+        <span class="text-bg-info  pb-2 pt-2  font-custom">Exam => {{ currentQuestion.Exam }}</span>
       </div>
       <div v-if="currentQuestion && currentQuestion.Explanation" class=" pt-2 pb-2   ">
         <span class="text-bg-info pb-2 pt-2">Explanation => {{ currentQuestion.Explanation }} </span>
