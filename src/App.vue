@@ -16,7 +16,7 @@
           </div>
         </div>
         <div v-if="currentQuestion">
-          <div class="pb-4">
+          <div class="pb-4 pt-4">
             <span class="text-warning fs-2">{{ currentQuestionIndex + 1 }} .</span>
             <span class="fs-2">{{ currentQuestion.Question }}</span>
           </div>
