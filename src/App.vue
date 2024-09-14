@@ -21,7 +21,7 @@
           </div>
           <div class="d-flex gap-3 flex-column pb-4">
             <div v-for="(option, index) in currentQuestion.Options" :key="index">
-              <button class="btn btn-light fs-4" v-on:click="checkAnswer(option)" :style="buttonStyle(option)">
+              <button class="btn btn-light fs-4" v-on:click="checkAnswer(option)" :style="buttonStyle(option)" :disabled="isSelected(currentQuestionIndex)">
                 {{ option }}
               </button>
             </div>
@@ -68,6 +68,7 @@ export default {
       showResults: false,
       selectedOption: null,
       questionJump: null,
+      answerChosen : []
     };
   },
   methods: {
@@ -94,11 +95,16 @@ export default {
     },
     checkAnswer(option) {
       this.selectedOption = option;
+      this.answerChosen [this.currentQuestionIndex] = option ;
       if (option === this.currentQuestion.CorrectAnswer) {
         this.score++
       }
+      this.saveQuiz()
+      console.log(this.answerChosen)
+
     },
     buttonStyle(option) {
+      this.selectedOption = this.answerChosen[this.currentQuestionIndex]
       if (this.selectedOption === option) {
         return option === this.currentQuestion.CorrectAnswer ?
           "background-color : green ; color : white" :
@@ -127,10 +133,14 @@ export default {
     removeNumbers(question) {
       return question.replace(/^\d+\.\s*/, '');
     },
+    isSelected(currentQuestionIndex){
+        return this.answerChosen[currentQuestionIndex] !== undefined
+    },
     saveQuiz() {
       const quiz = {
         currentQuestionIndex: this.currentQuestionIndex,
         score: this.score,
+        answerChosen : this.answerChosen,
       };
       localStorage.setItem("quizIndex", JSON.stringify(quiz));
     },
@@ -140,6 +150,7 @@ export default {
         const { currentQuestionIndex, score } = JSON.parse(savedQuiz);
         this.currentQuestionIndex = currentQuestionIndex;
         this.score = score;
+        this.answerChosen = answerChosen;
       }
     },
     jumpQuestionNum() {
