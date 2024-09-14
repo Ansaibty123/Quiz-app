@@ -4,10 +4,11 @@
 
     <!-- Quiz Content -->
     <div v-if="!showResults">
-      <div v-if="questions && questions.length > 0" >
+      <div v-if="questions && questions.length > 0">
         <div class="d-flex justify-content-between pb-3 flex-row gap-2 border-bottom border-light ">
           <div class="d-flex flex-row gap-2">
-            <span class="text-warning text-center custom-font">Question</span> <span class=" custom-font"> {{ currentQuestionIndex + 1 }} / {{ questions.length }}</span>
+            <span class="text-warning text-center custom-font">Question</span> <span class=" custom-font"> {{
+              currentQuestionIndex + 1 }} / {{ questions.length }}</span>
           </div>
           <div class="d-flex gap-2 w-50 p-0">
             <input v-model.number="questionJump" type="number" placeholder="Q. no" class="w-50 p-0 p-md-3">
@@ -21,7 +22,8 @@
           </div>
           <div class="d-flex gap-3 flex-column pb-4">
             <div v-for="(option, index) in currentQuestion.Options" :key="index">
-              <button class="btn btn-light fs-4" v-on:click="checkAnswer(option)" :style="buttonStyle(option)" :disabled="isSelected(currentQuestionIndex)">
+              <button class="btn btn-light fs-4" v-on:click="checkAnswer(option)" :style="buttonStyle(option)"
+                :disabled="isSelected(currentQuestionIndex)">
                 {{ option }}
               </button>
             </div>
@@ -43,6 +45,12 @@
         <button class=" btn btn-success" @click="nextPage"
           :disabled="currentQuestionIndex > questions.length - 1">Next</button>
       </div>
+    </div>
+
+    <div class="d-flex justify-content-center ">
+      <button @click="restartQuiz" class="btn btn-danger ">
+        Restart
+      </button>
     </div>
 
     <!-- Results -->
@@ -68,7 +76,7 @@ export default {
       showResults: false,
       selectedOption: null,
       questionJump: null,
-      answerChosen : []
+      answerChosen: []
     };
   },
   methods: {
@@ -95,7 +103,7 @@ export default {
     },
     checkAnswer(option) {
       this.selectedOption = option;
-      this.answerChosen [this.currentQuestionIndex] = option ;
+      this.answerChosen[this.currentQuestionIndex] = option;
       if (option === this.currentQuestion.CorrectAnswer) {
         this.score++
       }
@@ -133,14 +141,22 @@ export default {
     removeNumbers(question) {
       return question.replace(/^\d+\.\s*/, '');
     },
-    isSelected(currentQuestionIndex){
-        return this.answerChosen[currentQuestionIndex] !== undefined
+    isSelected(currentQuestionIndex) {
+      return this.answerChosen[currentQuestionIndex] !== undefined
+    },
+    restartQuiz() {
+      localStorage.clear()
+      this.answerChosen = [];
+      this.currentQuestionIndex = 0;
+      this.score = 0;
+      this.showResults = false
+
     },
     saveQuiz() {
       const quiz = {
         currentQuestionIndex: this.currentQuestionIndex,
         score: this.score,
-        answerChosen : this.answerChosen,
+        answerChosen: this.answerChosen,
       };
       localStorage.setItem("quizIndex", JSON.stringify(quiz));
     },
@@ -173,9 +189,9 @@ export default {
 }
 </script>
 <style>
-@media (max-width:720px){
-.custom-font{
-  font-size: 1rem;
-}
+@media (max-width:720px) {
+  .custom-font {
+    font-size: 1rem;
+  }
 }
 </style>
